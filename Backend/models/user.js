@@ -1,10 +1,12 @@
 let Sequelize = require("sequelize");
 let db = require("../db");
 let bcrypt = require("bcryptjs");
+let Post = require("./post");
 
 let User = db.define("user", {
   firstName: {
     type: Sequelize.STRING,
+    allowNull: false,
     validate: {
       is: {
         args: [/^[\s\w-éàëêâ]{2,23}\w$/],
@@ -15,6 +17,7 @@ let User = db.define("user", {
   },
   lastName: {
     type: Sequelize.STRING,
+    allowNull: false,
     validate: {
       is: {
         args: [/^[\s\w-éàëêâ]{2,23}\w$/],
@@ -26,6 +29,7 @@ let User = db.define("user", {
   email: {
     type: Sequelize.STRING,
     unique: true,
+    allowNull: false,
     validate: {
       is: {
         args: [/^\w{3,}@\w{3,}\.\w{2,3}$/],
@@ -35,6 +39,7 @@ let User = db.define("user", {
   },
   password: {
     type: Sequelize.STRING,
+    allowNull: false,
     validate: {
       is: {
         args: [/^(?!.* )(?=.*\d)(?=.*[A-Z]).{8,24}$/],
@@ -44,6 +49,8 @@ let User = db.define("user", {
     },
   },
 });
+
+User.hasMany(Post, { as: "posts", foreignKey: "userId" });
 
 User.beforeCreate(async (user, options) => {
   let salt = await bcrypt.genSalt(10);
