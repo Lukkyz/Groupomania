@@ -1,5 +1,6 @@
 let Sequelize = require("sequelize");
 let db = require("../db");
+let bcrypt = require("bcryptjs");
 
 let User = db.define("user", {
   firstName: {
@@ -42,6 +43,11 @@ let User = db.define("user", {
       },
     },
   },
+});
+
+User.beforeCreate(async (user, options) => {
+  let salt = await bcrypt.genSalt(10);
+  user.password = await bcrypt.hash(user.password, salt);
 });
 
 db.sync()
