@@ -1,6 +1,7 @@
 let Sequelize = require("sequelize");
 let db = require("../db");
 let bcrypt = require("bcryptjs");
+let Comment = require("./comment");
 let Post = require("./post");
 
 let User = db.define("user", {
@@ -51,6 +52,7 @@ let User = db.define("user", {
 });
 
 User.hasMany(Post, { as: "posts", foreignKey: "userId" });
+User.hasMany(Comment, { as: "comments", foreignKey: "userId" });
 
 User.beforeCreate(async (user, options) => {
   let salt = await bcrypt.genSalt(10);
