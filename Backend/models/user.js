@@ -51,10 +51,15 @@ let User = db.define("user", {
   },
 });
 
-User.hasMany(Post, { as: "posts", foreignKey: "userId", onDelete: "cascade" });
+User.hasMany(Post, {
+  as: "posts",
+  foreignKey: { name: "userId", allowNull: false },
+  onDelete: "cascade",
+});
+
 User.hasMany(Comment, {
   as: "comments",
-  foreignKey: "userId",
+  foreignKey: { name: "userId", allowNull: false },
   onDelete: "cascade",
 });
 
