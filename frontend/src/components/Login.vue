@@ -17,6 +17,7 @@
           ></v-text-field>
         </v-col>
       </v-row>
+      <p v-if="error">{{ error }}</p>
       <v-btn @click="onSubmit" :disabled="!valid" color="success" class="mr-4">Connexion</v-btn>
     </v-container>
   </v-form>
@@ -53,6 +54,6 @@ export default {
       this.$refs.form.validate();
     }
   },
-  computed: mapGetters(["user"])
+  computed: mapGetters(["user", "error"])
 };
 </script>
