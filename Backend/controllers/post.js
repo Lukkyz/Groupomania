@@ -1,8 +1,21 @@
 let Post = require("../models/post");
 let Comment = require("../models/comment");
+let User = require("../models/user");
 
 exports.getAll = (req, res, next) => {
-  Post.findall({}).then((posts) => {
+  Post.findAll({
+    include: [
+      {
+        model: User,
+        as: "user",
+        attributes: ["firstName", "lastName"],
+      },
+      {
+        model: Comment,
+        as: "comments",
+      },
+    ],
+  }).then((posts) => {
     res.status(200).json(posts);
   });
 };

@@ -63,6 +63,8 @@ User.hasMany(Comment, {
   onDelete: "cascade",
 });
 
+Post.belongsTo(User);
+
 User.beforeCreate(async (user, options) => {
   let salt = await bcrypt.genSalt(10);
   user.password = await bcrypt.hash(user.password, salt);

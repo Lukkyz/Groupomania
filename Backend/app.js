@@ -5,6 +5,7 @@ var logger = require("morgan");
 let Sequelize = require("sequelize");
 let dotenv = require("dotenv").config();
 let db = require("./db");
+let cors = require("cors");
 
 db.authenticate()
   .then(console.log("Connection established"))
@@ -24,9 +25,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+app.use(
+  cors({
+    origin: "http://localhost:8080",
+  })
+);
 
 app.use("/", indexRouter);
-app.use("/users", usersRouter);
+app.use("/user", usersRouter);
 app.use("/post", postRouter);
 app.use("/comment", commentRouter);
 

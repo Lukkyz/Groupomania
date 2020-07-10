@@ -36,6 +36,8 @@ exports.login = (req, res, next) => {
           }
           res.status(200).json({
             userId: user.id,
+            firstName: user.firstName,
+            lastName: user.lastName,
             token: jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
               expiresIn: "1h",
             }),
@@ -43,5 +45,5 @@ exports.login = (req, res, next) => {
         })
         .catch((err) => res.status(500).json({ err }));
     })
-    .catch((err) => res.status(500).json({ err }));
+    .catch((err) => res.status(500).json({ msg: "NON" }));
 };
