@@ -46,6 +46,11 @@ export default {
   computed: mapGetters(["allPosts"]),
   created() {
     this.fetchPosts();
+  },
+  beforeRouteEnter(to, from, next) {
+    next(async vm => {
+      await vm.refresh();
+    });
   }
 };
 </script>

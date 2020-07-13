@@ -2,8 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import Login from "../views/Login.vue";
-import store from "../store/index";
-
+import store from "../store";
 Vue.use(VueRouter);
 
 const routes = [
@@ -20,6 +19,7 @@ const routes = [
   {
     path: "/about",
     name: "About",
+
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -32,9 +32,10 @@ const router = new VueRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
-  if (to.name !== "Login" && !store.getters.user.token) next({ name: "Login" });
-  else next();
+router.beforeEach(async (to, from, next) => {
+  if (to.name !== "Login" && !store.getters.user.userId) {
+    next({ name: "Login" });
+  } else next();
 });
 
 export default router;
