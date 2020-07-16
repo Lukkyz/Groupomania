@@ -33,8 +33,11 @@ const router = new VueRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
+  await store.dispatch("refresh");
   if (to.name !== "Login" && !store.getters.user.userId) {
     next({ name: "Login" });
+  } else if (store.getters.user.userId && to.name == "Login") {
+    next({ name: "Home" });
   } else next();
 });
 

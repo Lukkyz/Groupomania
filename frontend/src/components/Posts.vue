@@ -1,5 +1,6 @@
 <template>
   <div class="Posts">
+    <addPost />
     <div v-for="post in allPosts" :key="post.id">
       <v-card class="mx-auto" color="white" max-width="800">
         <v-card-title>
@@ -37,9 +38,13 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
+import addPost from "./addPost";
 
 export default {
   name: "Posts",
+  components: {
+    addPost
+  },
   methods: {
     ...mapActions(["fetchPosts", "deletePost", "updatePost"])
   },
