@@ -1,16 +1,22 @@
 <template>
-  <div class="w-800 mx-auto my-5">
+  <v-form v-model="valid" class="w-800 mx-auto my-5">
     <div class="my-2">
       <v-btn small @click="manageBtn">Ajouter un post</v-btn>
     </div>
     <transition name="fade">
       <div v-if="show" class="add-post">
-        <v-text-field v-model="title" label="Titre" :rules="rules" hide-details="auto"></v-text-field>
-        <v-textarea v-model="body" rows="2" name="input-7-1" label="Ecrivez..."></v-textarea>
-        <v-btn small @click="submit(title, body, userId)">Envoyer</v-btn>
+        <v-text-field v-model="title" label="Titre" :rules="[ rules.title ]" hide-details="auto"></v-text-field>
+        <v-textarea
+          v-model="body"
+          rows="2"
+          name="input-7-1"
+          :rules="[ rules.body ]"
+          label="Ecrivez..."
+        ></v-textarea>
+        <v-btn small :disabled="!valid" @click="submit(title, body, userId)">Envoyer</v-btn>
       </div>
     </transition>
-  </div>
+  </v-form>
 </template>
 
 <script>
@@ -21,7 +27,16 @@ export default {
       title: "",
       body: "",
       show: false,
-      userId: this.$store.getters["user"].userId
+      userId: this.$store.getters["user"].userId,
+      valid: true,
+      rules: {
+        title: v =>
+          /^[\s\w-éàëêâ]{5,100}\w$/.test(v) ||
+          "Le texte est invalide, il ne doit contenir que des caractères non spéciaux (min 5, max 100)",
+        body: v =>
+          /^[\s\w-éàëêâ]{50,500}\w$/.test(v) ||
+          "Le texte est invalide, il ne doit contenir que des caractères non spéciaux (min 50, max 500)"
+      }
     };
   },
   methods: {
@@ -36,6 +51,9 @@ export default {
         this.title = "";
         this.show = false;
       });
+    },
+    validate() {
+      this.$refs.form.validate();
     }
   }
 };

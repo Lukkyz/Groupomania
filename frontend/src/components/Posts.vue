@@ -3,11 +3,16 @@
     <addPost />
     <div v-for="post in allPosts" :key="post.id">
       <v-card class="mx-auto mb-4" color="white" max-width="800">
-        <v-card-title>
+        <v-card-title class="d-flex justify-space-between">
           <span class="title font-weight-bold">{{ post.title }}</span>
+          <span class="subtitle-2">{{ "Crée : " + parse(post.createdAt) }}</span>
+          <span
+            v-if="parse(post.createdAt) !== parse(post.updatedAt)"
+            class="subtitle-2"
+          >{{ "Modifié : " + parse(post.updatedAt) }}</span>
         </v-card-title>
 
-        <v-card-text class="headline font-weight-bold">{{ post.body }}</v-card-text>
+        <v-card-text class="headline font-weight-light" color="white">{{ post.body }}</v-card-text>
 
         <v-card-actions>
           <v-list-item class="grow">
@@ -46,7 +51,21 @@ export default {
     addPost
   },
   methods: {
-    ...mapActions(["fetchPosts", "deletePost", "updatePost"])
+    ...mapActions(["fetchPosts", "deletePost", "updatePost"]),
+    parse(string) {
+      let date = new Date(string);
+      let options = {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+      };
+      return (
+        date.toLocaleDateString("fr-FR", options) +
+        " " +
+        date.toLocaleTimeString("fr-FR")
+      );
+    }
   },
   computed: mapGetters(["allPosts"]),
   created() {

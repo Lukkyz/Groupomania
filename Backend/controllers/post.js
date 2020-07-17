@@ -15,6 +15,7 @@ exports.getAll = (req, res, next) => {
         as: "comments",
       },
     ],
+    order: [["createdAt", "DESC"]],
   }).then((posts) => {
     res.status(200).json(posts);
   });
