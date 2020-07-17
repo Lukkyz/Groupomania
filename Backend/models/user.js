@@ -63,7 +63,7 @@ User.hasMany(Comment, {
   onDelete: "cascade",
 });
 
-Post.belongsTo(User);
+Post.belongsTo(User, { foreignKey: { name: "userId" } });
 
 User.beforeCreate(async (user, options) => {
   let salt = await bcrypt.genSalt(10);

@@ -9,7 +9,7 @@ Vue.config.productionTip = false;
 axios.defaults.withCredentials = true;
 
 axios.interceptors.request.use((config) => {
-  config.headers["Authorization"] = store.getters.user.token;
+  config.headers["Authorization"] = "Bearer " + store.getters.user.token;
   return config;
 });
 

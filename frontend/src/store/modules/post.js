@@ -33,7 +33,7 @@ const actions = {
 
 const mutations = {
   setPosts: (state, posts) => (state.posts = posts),
-  newPost: (state, todo) => state.todos.unshift(todo),
+  newPost: (state, post) => state.posts.unshift(post),
   removePost: (state, id) =>
     (state.posts = state.posts.filter((post) => post.id !== id)),
   updateTodo: (state, updPost) => {

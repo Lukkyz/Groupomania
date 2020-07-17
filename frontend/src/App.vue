@@ -30,7 +30,7 @@
           </v-list-item>
           <v-list-item link>
             <v-list-item-content>
-              <v-list-item-title @click="disconnect">Déconnexion</v-list-item-title>
+              <v-list-item-title @click="logOut">Déconnexion</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </div>

@@ -2,7 +2,7 @@
   <div class="Posts">
     <addPost />
     <div v-for="post in allPosts" :key="post.id">
-      <v-card class="mx-auto" color="white" max-width="800">
+      <v-card class="mx-auto mb-4" color="white" max-width="800">
         <v-card-title>
           <span class="title font-weight-bold">{{ post.title }}</span>
         </v-card-title>
@@ -27,7 +27,7 @@
               <span class="subheading mr-2"></span>
               <span class="mr-1">·</span>
               <v-icon class="mr-1">mdi-message-text</v-icon>
-              <span class="subheading">{{ post.comments.length}}</span>
+              <span class="subheading">{{ post.comments ? post.comments.length : 0 }}</span>
             </v-row>
           </v-list-item>
         </v-card-actions>
@@ -51,11 +51,6 @@ export default {
   computed: mapGetters(["allPosts"]),
   created() {
     this.fetchPosts();
-  },
-  beforeRouteEnter(to, from, next) {
-    next(async vm => {
-      await vm.refresh();
-    });
   }
 };
 </script>

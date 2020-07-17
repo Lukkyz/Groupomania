@@ -34,6 +34,7 @@ const actions = {
     }
   },
   async logOut({ commit }) {
+    await axios.post(user_uri + "logout");
     commit("setUser", "");
     router.push("/login");
   },

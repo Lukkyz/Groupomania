@@ -33,14 +33,25 @@ exports.getOne = (req, res, next) => {
 };
 
 exports.create = (req, res, next) => {
+  console.log(req.body);
   let { title, body, userId } = req.body;
-  Post.create({
-    title,
-    body,
-    userId,
-  })
-    .then(() => {
-      res.status(201).json({ message: "Votre topic a bien été crée" });
+  Post.create(
+    {
+      title,
+      body,
+      userId,
+    },
+    {
+      include: [
+        { model: User, as: "user", attributes: ["firstName", "lastName"] },
+      ],
+    }
+  )
+    .then((post) => {
+      return post.reload();
+    })
+    .then((post) => {
+      res.status(201).json(post);
     })
     .catch((err) => res.status(500).json({ err }));
 };

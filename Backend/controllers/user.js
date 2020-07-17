@@ -91,7 +91,7 @@ exports.refreshToken = (req, res, next) => {
 
 exports.logOut = (req, res, next) => {
   try {
-    res.clearCookie("token");
+    res.clearCookie("refreshtoken", { path: "user/refresh_token" });
     res.status(200).json();
   } catch (e) {
     res.status(400);
