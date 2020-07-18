@@ -1,4 +1,36 @@
 let Comment = require("../models/comment");
+let User = require("../models/user");
+
+exports.getAll = (req, res, next) => {
+  Comment.findAll({
+    order: [["parent_comment_id", "ASC"]],
+  }).then((comments) => res.status(201).json(comments));
+};
+
+exports.create = (req, res, next) => {
+  console.log(req.body);
+  let { body, parentCommentId, postId, userId } = req.body;
+  Comment.create(
+    {
+      body,
+      parent_comment_id: parentCommentId,
+      postId,
+      userId,
+    },
+    {
+      include: [
+        { model: User, as: "user", attributes: ["firstName", "lastName"] },
+      ],
+    }
+  )
+    .then((comment) => {
+      return comment.reload();
+    })
+    .then((comment) => {
+      res.status(201).json(comment);
+    })
+    .catch((err) => res.status(500).json({ err }));
+};
 
 exports.modify = (req, res, next) => {
   let body = req.body.body;

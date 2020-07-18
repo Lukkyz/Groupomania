@@ -41,14 +41,15 @@
         </v-list-item>
       </v-card-actions>
     </v-card>
-    <div v-if="show" class="w-800 mx-auto my-5">
-      <v-textarea v-model="comment" rows="2" name="input-7-1" label="Ecrivez..."></v-textarea>
-      <v-btn small :disabled="!valid">Envoyer</v-btn>
-    </div>
+    <v-form v-model="valid" v-if="show" class="w-800 mx-auto my-5">
+      <v-textarea v-model="body" :rules="[rules.body]" rows="2" name="input-7-1" label="Ecrivez..."></v-textarea>
+      <v-btn small :disabled="!valid" @click="submit(body, post.id)">Envoyer</v-btn>
+    </v-form>
   </div>
 </template>
 
 <script>
+import { mapActions } from "vuex";
 export default {
   props: {
     post: Object,
@@ -56,12 +57,18 @@ export default {
   },
   data() {
     return {
-      comment: "",
+      body: "",
       valid: true,
-      show: false
+      show: false,
+      rules: {
+        body: v =>
+          /^[\s\w-éàëêâ]{5,100}\w$/.test(v) ||
+          "Le texte est invalide, il ne doit contenir que des caractères non spéciaux (min 5, max 100)"
+      }
     };
   },
   methods: {
+    ...mapActions(["addComment"]),
     parse(string) {
       let date = new Date(string);
       let options = {
@@ -78,6 +85,19 @@ export default {
     },
     manageInput() {
       this.show = !this.show;
+    },
+    submit(body, postId) {
+      let obj = {
+        body,
+        postId,
+        userId: this.$store.getters["user"].userId
+      };
+      this.addComment(obj);
+      this.show = false;
+      this.body = "";
+    },
+    validate() {
+      this.$refs.form.validate();
     }
   }
 };

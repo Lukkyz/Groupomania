@@ -63,6 +63,7 @@ User.hasMany(Comment, {
   onDelete: "cascade",
 });
 
+Comment.belongsTo(User);
 Post.belongsTo(User, { foreignKey: { name: "userId" } });
 
 User.beforeCreate(async (user, options) => {

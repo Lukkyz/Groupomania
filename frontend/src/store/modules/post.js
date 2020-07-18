@@ -1,4 +1,6 @@
 const post_uri = "http://localhost:3000/post/";
+const comment_uri = "http://localhost:3000/comment/";
+
 import axios from "axios";
 
 const state = {
@@ -32,6 +34,12 @@ const actions = {
     let response = await axios.put(post_uri + post.id, post);
     commit("updatePost", response.data);
   },
+
+  // Comment
+  async addComment({ commit }, comment) {
+    let response = await axios.post(comment_uri, comment);
+    commit("newComment", response.data);
+  },
 };
 
 const mutations = {
@@ -44,6 +52,10 @@ const mutations = {
     if (index !== -1) {
       state.posts.splice(index, 1, updPost);
     }
+  },
+  newComment: (state, comment) => {
+    let post = state.posts.find((post) => post.id === comment.postId);
+    post.comments.unshift(comment);
   },
 };
 

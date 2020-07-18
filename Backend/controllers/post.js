@@ -13,9 +13,15 @@ exports.getAll = (req, res, next) => {
       {
         model: Comment,
         as: "comments",
+        include: [
+          {
+            model: User,
+            as: "user",
+            attributes: ["firstName", "lastName"],
+          },
+        ],
       },
     ],
-    order: [["createdAt", "DESC"]],
   }).then((posts) => {
     res.status(200).json(posts);
   });
