@@ -2,41 +2,7 @@
   <div class="Posts">
     <addPost />
     <div v-for="post in allPosts" :key="post.id">
-      <v-card class="mx-auto mb-4" color="white" max-width="800">
-        <v-card-title class="d-flex justify-space-between">
-          <span class="title font-weight-bold">{{ post.title }}</span>
-          <span class="subtitle-2">{{ "Crée : " + parse(post.createdAt) }}</span>
-          <span
-            v-if="parse(post.createdAt) !== parse(post.updatedAt)"
-            class="subtitle-2"
-          >{{ "Modifié : " + parse(post.updatedAt) }}</span>
-        </v-card-title>
-
-        <v-card-text class="headline font-weight-light" color="white">{{ post.body }}</v-card-text>
-
-        <v-card-actions>
-          <v-list-item class="grow">
-            <v-list-item-avatar color="grey darken-3">
-              <v-img
-                class="elevation-6"
-                src="https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortCurly&accessoriesType=Prescription02&hairColor=Black&facialHairType=Blank&clotheType=Hoodie&clotheColor=White&eyeType=Default&eyebrowType=DefaultNatural&mouthType=Default&skinColor=Light"
-              ></v-img>
-            </v-list-item-avatar>
-
-            <v-list-item-content>
-              <v-list-item-title>{{ post.user.firstName + " " + post.user.lastName}}</v-list-item-title>
-            </v-list-item-content>
-
-            <v-row align="center" justify="end">
-              <v-icon class="mr-1">mdi-heart</v-icon>
-              <span class="subheading mr-2"></span>
-              <span class="mr-1">·</span>
-              <v-icon class="mr-1">mdi-message-text</v-icon>
-              <span class="subheading">{{ post.comments ? post.comments.length : 0 }}</span>
-            </v-row>
-          </v-list-item>
-        </v-card-actions>
-      </v-card>
+      <Post :post="post" :unique="false"></Post>
     </div>
   </div>
 </template>
@@ -44,28 +10,15 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import addPost from "./addPost";
-
+import Post from "./Post";
 export default {
   name: "Posts",
   components: {
-    addPost
+    addPost,
+    Post
   },
   methods: {
-    ...mapActions(["fetchPosts", "deletePost", "updatePost"]),
-    parse(string) {
-      let date = new Date(string);
-      let options = {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric"
-      };
-      return (
-        date.toLocaleDateString("fr-FR", options) +
-        " " +
-        date.toLocaleTimeString("fr-FR")
-      );
-    }
+    ...mapActions(["fetchPosts", "deletePost", "updatePost"])
   },
   computed: mapGetters(["allPosts"]),
   created() {

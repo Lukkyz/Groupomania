@@ -7,6 +7,9 @@ const state = {
 
 const getters = {
   allPosts: (state) => state.posts,
+  getPost: (state) => (id) => {
+    return state.posts.find((post) => post.id == id);
+  },
 };
 
 const actions = {

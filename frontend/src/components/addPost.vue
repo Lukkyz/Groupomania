@@ -4,7 +4,7 @@
       <v-btn small @click="manageBtn">Ajouter un post</v-btn>
     </div>
     <transition name="fade">
-      <div v-if="show" class="add-post">
+      <div v-if="show" class="add-post" background-color="light-blue">
         <v-text-field v-model="title" label="Titre" :rules="[ rules.title ]" hide-details="auto"></v-text-field>
         <v-textarea
           v-model="body"
@@ -42,7 +42,6 @@ export default {
   methods: {
     ...mapActions(["addPost"]),
     manageBtn() {
-      console.log();
       this.show = !this.show;
     },
     submit(title, body, userId) {
