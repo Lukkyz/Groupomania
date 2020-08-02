@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import Post from "../components/Post";
 import Comment from "../components/Comment";
 export default {
@@ -16,8 +16,11 @@ export default {
     Post,
     Comment
   },
-  data() {
-    return {};
+  created() {
+    this.fetchPosts();
+  },
+  methods: {
+    ...mapActions(["fetchPosts"])
   },
   computed: {
     ...mapGetters(["getPost"]),

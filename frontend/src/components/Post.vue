@@ -1,8 +1,8 @@
 <template>
   <div>
-    <v-card class="mx-auto mb-4" color="white" max-width="800">
+    <v-card class="mx-auto mb-4" color="white" max-width="900">
       <v-card-title class="d-flex justify-space-between">
-        <span class="title font-weight-bold">{{ post.title }}</span>
+        <span class="subtitle-1">{{ post.title }}</span>
         <span class="subtitle-2">{{ "Crée : " + parse(post.createdAt) }}</span>
         <span
           v-if="parse(post.createdAt) !== parse(post.updatedAt)"
@@ -10,17 +10,12 @@
         >{{ "Modifié : " + parse(post.updatedAt) }}</span>
       </v-card-title>
 
-      <v-card-text class="headline font-weight-light" color="white">{{ post.body }}</v-card-text>
+      <v-card-text
+        class="text-black subtitle-1 font-weight-light"
+      >{{ !unique ? truncate(post.body, 100) : post.body }}</v-card-text>
 
       <v-card-actions>
         <v-list-item class="grow">
-          <v-list-item-avatar color="grey darken-3">
-            <v-img
-              class="elevation-6"
-              src="https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortCurly&accessoriesType=Prescription02&hairColor=Black&facialHairType=Blank&clotheType=Hoodie&clotheColor=White&eyeType=Default&eyebrowType=DefaultNatural&mouthType=Default&skinColor=Light"
-            ></v-img>
-          </v-list-item-avatar>
-
           <v-list-item-content>
             <v-list-item-title>{{ post.user.firstName + " " + post.user.lastName}}</v-list-item-title>
           </v-list-item-content>
@@ -98,10 +93,24 @@ export default {
     },
     validate() {
       this.$refs.form.validate();
+    },
+    truncate(text, num) {
+      let arr = text.split("");
+      let textTronc = "";
+      for (let i = 0; i < arr.length && i < num; i++) {
+        textTronc += arr[i];
+        if (i == num - 1) {
+          textTronc += "...";
+        }
+      }
+      return textTronc;
     }
   }
 };
 </script>
 
 <style>
+.text-black {
+  color: black !important;
+}
 </style>

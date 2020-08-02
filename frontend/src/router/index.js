@@ -3,24 +3,58 @@ import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import Login from "../views/Login.vue";
 import Post from "../views/Post";
+import Signin from "../views/Signin";
+import Chat from "../views/Chat";
+import Profile from "../views/Profile";
 import store from "../store";
 Vue.use(VueRouter);
 
+const isAuth = (to, from, next) => {
+  if (!store.getters.user.token) {
+    next({ name: "Login" });
+  } else {
+    next();
+  }
+};
+
+const restrictAuth = (to, from, next) => {
+  if (store.getters.user.token) {
+    next({ name: "Home" });
+  } else {
+    next();
+  }
+};
+
 const routes = [
-  {
-    path: "/",
-    name: "Home",
-    component: Home,
-  },
+  { path: "/", name: "Home", component: Home, beforeEnter: isAuth },
   {
     path: "/post/:id",
     name: "Post",
     component: Post,
+    beforeEnter: isAuth,
   },
   {
     path: "/login",
     name: "Login",
     component: Login,
+    beforeEnter: restrictAuth,
+  },
+  {
+    path: "/signin",
+    name: "Signin",
+    component: Signin,
+    beforeEnter: restrictAuth,
+  },
+  {
+    path: "/chat",
+    name: "Chat",
+    component: Chat,
+    beforeEnter: isAuth,
+  },
+  {
+    path: "/profile/:id",
+    name: "Profile",
+    component: Profile,
   },
   {
     path: "/about",
@@ -39,12 +73,11 @@ const router = new VueRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  await store.dispatch("refresh");
-  if (to.name !== "Login" && !store.getters.user.userId) {
-    next({ name: "Login" });
-  } else if (store.getters.user.userId && to.name == "Login") {
-    next({ name: "Home" });
-  } else next();
+  if (!store.getters.loading && to.name !== "Login") {
+    await store.dispatch("refresh");
+    store.dispatch("load");
+  }
+  next();
 });
 
 export default router;

@@ -6,7 +6,6 @@
         <v-col cols="12" md="7">
           <v-text-field v-model="email" :rules="[rules.email]" label="E-mail" required></v-text-field>
         </v-col>
-
         <v-col cols="12" md="7">
           <v-text-field
             v-model="password"
@@ -18,12 +17,10 @@
         </v-col>
       </v-row>
       <p v-if="error">{{ error }}</p>
-      <v-btn @click="onSubmit" :disabled="!valid" color="success" class="mr-4">Connexion</v-btn>
+      <v-btn v-on:click.native="onSubmit" :disabled="!valid" color="success" class="mr-4">Connexion</v-btn>
     </v-container>
   </v-form>
 </template>
-
-
 <script>
 import { mapGetters, mapActions } from "vuex";
 
@@ -35,9 +32,13 @@ export default {
       email: "",
       password: "",
       rules: {
+        fName: v => /^[\s\w-éàëêâ]{2,23}$/.test(v) || "Le prénom est invalide",
+        lName: v => /^[\s\w-éàëêâ]{2,23}$/.test(v) || "Le nom est invalide",
         password: v =>
           /^(?!.* )(?=.*\d)(?=.*[A-Z]).{8,24}$/.test(v) ||
           "Le mot de passe est invalide",
+        confPassword: v =>
+          v === this.password || "Le mot de passe ne correspond pas",
         email: v =>
           /^\w{3,}@\w{3,}\.\w{2,3}$/.test(v) ||
           "L'email est invalide, ex. d'e-mail valide: john@doe.com"

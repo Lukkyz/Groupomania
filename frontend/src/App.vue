@@ -22,12 +22,24 @@
             </v-list-item-content>
           </v-list-item>
         </router-link>
-        <div v-if="user.userId">
+        <router-link to="/chat">
           <v-list-item link>
+            <v-list-item-action>
+              <v-icon>mdi-comment-multiple</v-icon>
+            </v-list-item-action>
             <v-list-item-content>
-              <v-list-item-title>{{ user.firstName + " " + user.lastName }}</v-list-item-title>
+              <v-list-item-title>Live message</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
+        </router-link>
+        <div v-if="user.userId">
+          <router-link :to="{ name: 'Profile', params: {id: user.userId}}">
+            <v-list-item link>
+              <v-list-item-content>
+                <v-list-item-title>{{ user.firstName + " " + user.lastName }}</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </router-link>
           <v-list-item link>
             <v-list-item-content>
               <v-list-item-title @click="logOut">Déconnexion</v-list-item-title>
@@ -42,7 +54,7 @@
               </v-list-item-content>
             </v-list-item>
           </router-link>
-          <router-link to="/login">
+          <router-link to="/signin">
             <v-list-item link>
               <v-list-item-content>
                 <v-list-item-title>Crée un compte</v-list-item-title>

@@ -7,5 +7,6 @@ router.post("/signup", userCtrl.signup);
 router.post("/login", userCtrl.login);
 router.post("/refresh_token", userCtrl.refreshToken);
 router.post("/logout", userCtrl.logOut);
+router.get("/:id", userCtrl.getUser);
 
 module.exports = router;

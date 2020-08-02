@@ -27,6 +27,32 @@ exports.getAll = (req, res, next) => {
   });
 };
 
+exports.postUser = (req, res, next) => {
+  Post.findAll({
+    where: {
+      userId: req.params.userid,
+    },
+    include: [
+      {
+        model: User,
+        as: "user",
+        attributes: ["firstName", "lastName"],
+      },
+      {
+        model: Comment,
+        as: "comments",
+        include: [
+          {
+            model: User,
+            as: "user",
+            attributes: ["firstName", "lastName"],
+          },
+        ],
+      },
+    ],
+  }).then((posts) => res.status(201).json(posts));
+};
+
 exports.getOne = (req, res, next) => {
   Post.findOne({
     where: {

@@ -97,3 +97,12 @@ exports.logOut = (req, res, next) => {
     res.status(400);
   }
 };
+
+exports.getUser = (req, res, next) => {
+  User.findOne({
+    where: {
+      id: req.params.id,
+    },
+    attributes: ["firstName", "lastName", "email", "id"],
+  }).then((user) => res.status(201).json(user));
+};
