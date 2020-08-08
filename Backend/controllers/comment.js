@@ -22,6 +22,21 @@ exports.commentUser = (req, res, next) => {
   }).then((comment) => res.status(201).json(comment));
 };
 
+exports.commentPost = (req, res, next) => {
+  Comment.findAll({
+    where: {
+      postId: req.params.postId,
+    },
+    include: [
+      {
+        model: User,
+        as: "user",
+        attributes: ["firstName", "lastName"],
+      },
+    ],
+  }).then((comment) => res.status(201).json(comment));
+};
+
 exports.create = (req, res, next) => {
   console.log(req.body);
   let { body, parentCommentId, postId, userId } = req.body;

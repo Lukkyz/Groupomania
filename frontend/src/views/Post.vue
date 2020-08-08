@@ -1,8 +1,8 @@
 <template>
   <div>
     <Post :post="post" :unique="true"></Post>
-    <div v-for="comment in post.comments" i v-bind:key="comment.id">
-      <Comment :comment="comment"></Comment>
+    <div v-for="comment in post.comments" v-bind:key="comment.id">
+      <Comment @deleted="deleteComment" :comment="comment"></Comment>
     </div>
   </div>
 </template>
@@ -20,7 +20,13 @@ export default {
     this.fetchPosts();
   },
   methods: {
-    ...mapActions(["fetchPosts"])
+    ...mapActions(["fetchPosts"]),
+    deleteComment(event) {
+      console.log(this.post);
+      this.post.comments = this.post.comments.filter(
+        comment => comment.id !== event
+      );
+    }
   },
   computed: {
     ...mapGetters(["getPost"]),
