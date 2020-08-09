@@ -12,6 +12,10 @@ const getters = {
   getPost: (state) => (id) => {
     return state.posts.find((post) => post.id == id);
   },
+  getPostUser: (state) => (userId) => {
+    let postUser = state.posts.filter((post) => post.userId == userId);
+    return postUser;
+  },
 };
 
 const actions = {

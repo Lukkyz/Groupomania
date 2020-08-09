@@ -21,6 +21,12 @@
           </v-list-item-content>
 
           <v-row align="center" justify="end">
+            <div v-if="post.userId == user.userId">
+              <v-icon
+                @click="dialog = true"
+                class="red lighten-1 rounded my-1 mx-3"
+              >mdi-close-box-outline</v-icon>
+            </div>
             <router-link v-if="unique == false" :to="{ name: 'Post', params: {id: post.id}}">
               <span class="mr-2">Voir plus...</span>
             </router-link>
@@ -40,11 +46,23 @@
       <v-textarea v-model="body" :rules="[rules.body]" rows="2" name="input-7-1" label="Ecrivez..."></v-textarea>
       <v-btn small :disabled="!valid" @click="submit(body, post.id)">Envoyer</v-btn>
     </v-form>
+    <v-row justify="center">
+      <v-dialog v-model="dialog" persistent max-width="290">
+        <v-card>
+          <v-card-title class="headline">Etes-vous sur de supprimer ce commentaire ?</v-card-title>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="red darken-1" text @click="deleteAPost">Oui</v-btn>
+            <v-btn text @click="dialog = false">Non</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-row>
   </div>
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
   props: {
     post: Object,
@@ -55,6 +73,7 @@ export default {
       body: "",
       valid: true,
       show: false,
+      dialog: false,
       rules: {
         body: v =>
           /^[\s\w-éàëêâ]{5,100}\w$/.test(v) ||
@@ -62,8 +81,17 @@ export default {
       }
     };
   },
+  computed: mapGetters(["user"]),
   methods: {
-    ...mapActions(["addComment"]),
+    ...mapActions(["addComment", "deletePost"]),
+    deleteAPost() {
+      this.deletePost(this.$props.post.id);
+      this.dialog = false;
+      if (this.$props.unique) {
+        this.$router.go(-1);
+      }
+      this.$emit("deleted", this.$props.post.id);
+    },
     parse(string) {
       let date = new Date(string);
       let options = {
