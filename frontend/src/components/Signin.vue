@@ -30,6 +30,7 @@
             required
           ></v-text-field>
         </v-col>
+        <v-checkbox v-model="moderator" class="mx-2" label="Chargé de communication"></v-checkbox>
       </v-row>
       <p v-if="error">{{ error }}</p>
       <v-btn @click="onSubmit" :disabled="!valid" color="success" class="mr-4">Connexion</v-btn>
@@ -49,6 +50,7 @@ export default {
       lName: "",
       password: "",
       confPassword: "",
+      moderator: false,
       rules: {
         fName: v => /^[\s\w-éàëêâ]{2,23}$/.test(v) || "Le prénom est invalide",
         lName: v => /^[\s\w-éàëêâ]{2,23}$/.test(v) || "Le nom est invalide",
@@ -73,7 +75,8 @@ export default {
         email: this.email,
         firstName: this.fName,
         lastName: this.lName,
-        password: this.password
+        password: this.password,
+        moderator: this.moderator
       }).then(() => {
         this.logIn({ email: this.email, password: this.password });
       });

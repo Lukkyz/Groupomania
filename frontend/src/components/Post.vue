@@ -21,7 +21,7 @@
           </v-list-item-content>
 
           <v-row align="center" justify="end">
-            <div v-if="post.userId == user.userId">
+            <div v-if="post.userId == user.userId || user.moderator == true">
               <v-icon
                 @click="dialog = true"
                 class="red lighten-1 rounded my-1 mx-3"

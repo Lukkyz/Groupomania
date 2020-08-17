@@ -7,7 +7,7 @@
         <span class="subtitle-2 ml-2">{{ comment.user.firstName + " " + comment.user.lastName}}</span>
         <v-row align="center" justify="end"></v-row>
       </v-card-actions>
-      <div v-if="comment.userId == user.userId">
+      <div v-if="comment.userId == user.userId || user.moderator == true">
         <v-icon @click="dialog = true" class="red lighten-1 rounded my-1 mx-3">mdi-close-box-outline</v-icon>
       </div>
     </v-card>

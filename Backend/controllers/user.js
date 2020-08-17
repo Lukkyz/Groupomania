@@ -4,12 +4,13 @@ let jwt = require("jsonwebtoken");
 let dotenv = require("dotenv").config();
 
 exports.signup = (req, res, next) => {
-  let { firstName, lastName, email, password } = req.body;
+  let { firstName, lastName, email, password, moderator} = req.body;
   User.create({
     firstName,
     lastName,
     email,
     password,
+    moderator
   })
     .then((data) =>
       res.status(201).json({ message: "Vous êtes maintenant inscris !" })
@@ -53,6 +54,7 @@ exports.login = (req, res, next) => {
               userId: user.id,
               firstName: user.firstName,
               lastName: user.lastName,
+              moderator: user.moderator,
               token: accessToken,
             });
           }
@@ -81,6 +83,7 @@ exports.refreshToken = (req, res, next) => {
         userId: user.id,
         firstName: user.firstName,
         lastName: user.lastName,
+        moderator: user.moderator,
         token: newToken,
       });
     });
@@ -103,6 +106,6 @@ exports.getUser = (req, res, next) => {
     where: {
       id: req.params.id,
     },
-    attributes: ["firstName", "lastName", "email", "id"],
+    attributes: ["firstName", "lastName", "email", "id", "moderator"],
   }).then((user) => res.status(201).json(user));
 };

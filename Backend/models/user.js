@@ -49,6 +49,10 @@ let User = db.define("user", {
       },
     },
   },
+  moderator: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false,
+  }
 });
 
 User.hasMany(Post, {
