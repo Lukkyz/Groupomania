@@ -40,6 +40,11 @@ const actions = {
     commit("setUser", "");
     router.push("/login");
   },
+  async deleteUser({ commit }, id) {
+    await axios.delete(user_uri + id);
+    commit("setUser", "");
+    router.push("/login");
+  },
   async load({ commit }) {
     commit("setLoading");
   },

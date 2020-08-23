@@ -3,6 +3,9 @@
     <div class="col-sm-3 offset-3 mt-5">
       <h3>{{ profile.firstName }}</h3>
       <h3>{{ profile.lastName }}</h3>
+      <div class="mt-4" v-if="user.userId == id || user.moderator == true">
+        <v-btn small color="error" @click="deleteAUser">Supprimer le compte</v-btn>
+      </div>
     </div>
     <h3 class="col-sm-4 offset-3 mt-5">Posts</h3>
     <div v-for="post in posts" v-bind:key="post.id">
@@ -37,18 +40,24 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["allPosts", "getPostUser"]),
+    ...mapGetters(["allPosts", "getPostUser", "user"]),
     posts() {
       return this.getPostUser(this.$route.params.id);
+    },
+    id() {
+      return this.$route.params.id;
     }
   },
   methods: {
-    ...mapActions(["fetchPosts", "deletePost", "updatePost"]),
+    ...mapActions(["fetchPosts", "deletePost", "updatePost", "deleteUser"]),
     async getProfile() {
       let response = await axios.get(
         `http://localhost:3000/user/${this.$route.params.id}`
       );
       this.profile = response.data;
+    },
+    deleteAUser() {
+      this.deleteUser(this.id);
     },
     async getComments() {
       let response = await axios.get(

@@ -38,7 +38,6 @@ exports.commentPost = (req, res, next) => {
 };
 
 exports.create = (req, res, next) => {
-  console.log(req.body);
   let { body, parentCommentId, postId, userId } = req.body;
   Comment.create(
     {
