@@ -42,7 +42,6 @@ exports.create = (req, res, next) => {
   Comment.create(
     {
       body,
-      parent_comment_id: parentCommentId,
       postId,
       userId,
     },

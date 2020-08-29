@@ -55,21 +55,6 @@ let User = db.define("user", {
   },
 });
 
-User.hasMany(Post, {
-  as: "posts",
-  foreignKey: { name: "userId", allowNull: false },
-  onDelete: "cascade",
-});
-
-User.hasMany(Comment, {
-  as: "comments",
-  foreignKey: { name: "userId", allowNull: false },
-  onDelete: "cascade",
-});
-
-Comment.belongsTo(User);
-Post.belongsTo(User, { foreignKey: { name: "userId" } });
-
 User.beforeCreate(async (user, options) => {
   let salt = await bcrypt.genSalt(10);
   user.password = await bcrypt.hash(user.password, salt);

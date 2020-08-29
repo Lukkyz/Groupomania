@@ -71,7 +71,6 @@ exports.refreshToken = (req, res, next) => {
   let payload = null;
   try {
     payload = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
-    console.log(payload);
     User.findOne({
       where: {
         id: payload.userId,

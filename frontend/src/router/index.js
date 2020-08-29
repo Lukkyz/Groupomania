@@ -73,7 +73,7 @@ const router = new VueRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  if (!store.getters.loading && to.name !== "Login") {
+  if (store.getters.user.id && !store.getters.loading && to.name !== "Login") {
     await store.dispatch("refresh");
     store.dispatch("load");
   }

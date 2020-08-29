@@ -1,6 +1,4 @@
 let Sequelize = require("sequelize");
-let User = require("./user");
-let Comment = require("./comment");
 let db = require("../db");
 
 let Post = db.define("post", {
@@ -12,9 +10,21 @@ let Post = db.define("post", {
     type: Sequelize.STRING(500),
     allowNull: false,
   },
+  likes: {
+    type: Sequelize.INTEGER,
+    defaultValue: 0,
+    validate: {
+      min: 0,
+    },
+  },
+  dislikes: {
+    type: Sequelize.INTEGER,
+    defaultValue: 0,
+    validate: {
+      min: 0,
+    },
+  },
 });
-
-Post.hasMany(Comment, { as: "comments", foreignKey: "postId" });
 
 db.sync()
   .then()
