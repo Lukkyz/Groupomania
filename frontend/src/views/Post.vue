@@ -22,7 +22,6 @@ export default {
   methods: {
     ...mapActions(["fetchPosts"]),
     deleteComment(event) {
-      console.log(this.post);
       this.post.comments = this.post.comments.filter(
         comment => comment.id !== event
       );

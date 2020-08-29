@@ -6,6 +6,7 @@ let Sequelize = require("sequelize");
 let dotenv = require("dotenv").config();
 let db = require("./db");
 let cors = require("cors");
+let relation = require("./models/relations");
 
 db.authenticate()
   .then(console.log("Connection established"))
