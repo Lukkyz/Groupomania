@@ -4,10 +4,6 @@
       <v-card-title class="d-flex justify-space-between">
         <span class="subtitle-1">{{ post.title }}</span>
         <span class="subtitle-2">{{ "Crée : " + parse(post.createdAt) }}</span>
-        <span
-          v-if="parse(post.createdAt) !== parse(post.updatedAt)"
-          class="subtitle-2"
-        >{{ "Modifié : " + parse(post.updatedAt) }}</span>
       </v-card-title>
 
       <v-card-text
@@ -27,6 +23,8 @@
                 class="red lighten-1 rounded my-1 mx-3"
               >mdi-close-box-outline</v-icon>
             </div>
+
+            <v-icon class="red mr-1">mdi-arrow-compress-all</v-icon>
             <router-link v-if="unique == false" :to="{ name: 'Post', params: {id: post.id}}">
               <span class="mr-2">Voir plus...</span>
             </router-link>

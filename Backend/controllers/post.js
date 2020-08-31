@@ -161,6 +161,44 @@ exports.manageLike = (req, res, next) => {
   });
 };
 
+exports.getDisliked = (req, res, next) => {
+  postLike
+    .findAll({
+      where: {
+        isLiked: 1,
+        userId: req.params.userId,
+      },
+    })
+    .then((post) => res.status(200).json(post))
+    .catch((err) => res.status(500).json(err));
+};
+
+exports.getLiked = (req, res, next) => {
+  postLike
+    .findAll({
+      where: {
+        isLiked: 1,
+        userId: req.params.userId,
+      },
+      attributes: ["postId"],
+    })
+    .then((post) => res.status(200).json(post))
+    .catch((err) => res.status(500).json(err));
+};
+
+exports.getDisliked = (req, res, next) => {
+  postLike
+    .findAll({
+      where: {
+        isLiked: 0,
+        userId: req.params.userId,
+      },
+      attributes: ["postId"],
+    })
+    .then((post) => res.status(200).json(post))
+    .catch((err) => res.status(500).json(err));
+};
+
 exports.delete = async (req, res, next) => {
   let post = await Post.findOne({
     where: {

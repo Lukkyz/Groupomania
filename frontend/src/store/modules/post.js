@@ -1,10 +1,12 @@
+import axios from "axios";
+
 const post_uri = "http://localhost:3000/post/";
 const comment_uri = "http://localhost:3000/comment/";
 
-import axios from "axios";
-
 const state = {
   posts: [],
+  postLiked: [],
+  postDisliked: [],
 };
 
 const getters = {
@@ -19,9 +21,14 @@ const getters = {
 };
 
 const actions = {
-  async fetchPosts({ commit }) {
+  async fetchPosts({ commit, rootGetters }) {
     let response = await axios.get(post_uri);
+    let userId = rootGetters.user.userId;
+    let liked = await axios.get(post_uri + "/liked/" + userId);
+    let disliked = await axios.get(post_uri + "/disliked/" + userId);
     commit("setPosts", response.data);
+    commit("setLiked", liked.data);
+    commit("setDisliked", disliked.data);
   },
 
   async addPost({ commit }, post) {
@@ -47,16 +54,12 @@ const actions = {
 };
 
 const mutations = {
+  setLiked: (state, posts) => (state.likedPosts = posts),
+  setDisliked: (state, posts) => (state.dislikedPosts = posts),
   setPosts: (state, posts) => (state.posts = posts),
   newPost: (state, post) => state.posts.unshift(post),
   removePost: (state, id) =>
     (state.posts = state.posts.filter((post) => post.id !== id)),
-  updateTodo: (state, updPost) => {
-    const index = state.posts.findIndex((post) => post.id === updPost.id);
-    if (index !== -1) {
-      state.posts.splice(index, 1, updPost);
-    }
-  },
   newComment: (state, comment) => {
     let post = state.posts.find((post) => post.id === comment.postId);
     post.comments.unshift(comment);
