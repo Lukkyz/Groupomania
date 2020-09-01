@@ -18,15 +18,40 @@ const getters = {
     let postUser = state.posts.filter((post) => post.userId == userId);
     return postUser;
   },
+  postDisliked: (state) => state.postDisliked,
+  postLiked: (state) => state.postLiked,
+  isLiked: (state) => (id) => {
+    let index = state.postLiked.findIndex(post => {
+      return post.postId == id
+    })
+    if (index > -1) {
+      return true
+    } else {
+      return false
+    }
+  },
+  isDisliked: (state) => (id) => {
+    let index = state.postDisliked.findIndex(post => {
+      return post.postId == id
+    })
+    if (index > -1) {
+      return true
+    } else {
+      return false
+    }  }
 };
 
 const actions = {
-  async fetchPosts({ commit, rootGetters }) {
+  async fetchPosts({ commit, dispatch }) {
     let response = await axios.get(post_uri);
-    let userId = rootGetters.user.userId;
-    let liked = await axios.get(post_uri + "/liked/" + userId);
-    let disliked = await axios.get(post_uri + "/disliked/" + userId);
+    dispatch("getLikedDisliked")
     commit("setPosts", response.data);
+  },
+
+  async getLikedDisliked({ commit, rootGetters}) {
+    let userId = rootGetters.user.userId;
+    let liked = await axios.get(post_uri + "liked/" + userId);
+    let disliked = await axios.get(post_uri + "disliked/" + userId);
     commit("setLiked", liked.data);
     commit("setDisliked", disliked.data);
   },
@@ -51,11 +76,53 @@ const actions = {
     let response = await axios.post(comment_uri, comment);
     commit("newComment", response.data);
   },
+
+  async clearLikeDislike({ commit }) {
+    commit("setLiked", {})
+    commit("setDisliked", {})
+  },
+
+  async addLikeDislike({ commit, getters, dispatch, rootGetters}, obj) {
+    const { id, like } = obj;
+    await axios
+      .post(post_uri + obj.id + "/like", {
+        userId: rootGetters.user.userId,
+        like,
+      })
+      .then(() => {
+        if (like == 1) {
+          commit("addLike", id);
+          commit("changeScore", {idPost: id, i:1});
+        } else if (like == -1) {
+          commit("addDisliked", id);
+          commit("changeScore", {idPost: id, i:-1});
+        } else if (like == 0) {
+          if (getters.isLiked(id)) {
+            commit("removeLiked", id)
+            commit("changeScore", {idPost: id, i: -1})
+          } else if (getters.isDisliked(id)) {
+            commit('removeDisliked', id);
+            commit('changeScore', {idPost: id, i: 1})
+          }
+        }
+      });
+      dispatch("getLikedDisliked")
+  },
 };
 
 const mutations = {
-  setLiked: (state, posts) => (state.likedPosts = posts),
-  setDisliked: (state, posts) => (state.dislikedPosts = posts),
+  changeScore: (state, {idPost, i}) => {
+    let index = state.posts.findIndex((post) => {
+      return post.id == idPost;
+    });
+    state.posts[index].score += i;
+  },
+  removeLiked: (state, id) => state.postLiked = state.postLiked.filter(post => post.postId !== id),
+  removeDisliked: (state, id) => state.postLiked = state.postDisliked.filter(post => post.postId !== id),
+  addLike: (state, id) => state.postLiked.unshift(id),
+  addDisliked: (state, id) => state.postDisliked.unshift(id),
+  setLiked: (state, posts) => (state.postLiked = posts),
+  setDisliked: (state, posts) => (state.postDisliked = posts),
   setPosts: (state, posts) => (state.posts = posts),
   newPost: (state, post) => state.posts.unshift(post),
   removePost: (state, id) =>

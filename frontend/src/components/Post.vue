@@ -15,6 +15,32 @@
           <v-list-item-content>
             <v-list-item-title>{{ post.user.firstName + " " + post.user.lastName}}</v-list-item-title>
           </v-list-item-content>
+          <span class="mt-2">{{ post.score }}</span>
+            <span v-if="score == 1" class="mt-2" @click="changeScore(0)">
+              <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                <path fill="green" d="M15,20H9V12H4.16L12,4.16L19.84,12H15V20Z" />
+              </svg>
+            </span>
+            <span v-else-if="score == 0" class="mt-2" @click="changeScore(1)">
+              <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                <path
+                  fill="currentColor"
+                  d="M16,13V21H8V13H2L12,3L22,13H16M7,11H10V19H14V11H17L12,6L7,11Z"
+                />
+              </svg>
+            </span>
+          
+            <span class="mt-2" v-if="score == -1" @click="changeScore(0)">
+            <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+    <path fill="red" d="M10,4H14V13L17.5,9.5L19.92,11.92L12,19.84L4.08,11.92L6.5,9.5L10,13V4Z" />
+</svg>
+          </span>
+            <span v-else-if="score == 0" class="mt-2" @click="changeScore(-1)">
+<svg style="width:24px;height:24px" viewBox="0 0 24 24">
+    <path fill="currentColor" d="M22,11L12,21L2,11H8V3H16V11H22M12,18L17,13H14V5H10V13H7L12,18Z" />
+</svg>
+            </span>
+          
 
           <v-row align="center" justify="end">
             <div v-if="post.userId == user.userId || user.moderator == true">
@@ -72,6 +98,7 @@ export default {
       valid: true,
       show: false,
       dialog: false,
+      score: 0,
       rules: {
         body: v =>
           /^[\s\w-éàëêâ]{5,100}\w$/.test(v) ||
@@ -79,9 +106,29 @@ export default {
       }
     };
   },
-  computed: mapGetters(["user"]),
+  computed: {
+    ...mapGetters(["user", "postLiked", "postDisliked", "isLiked", "isDisliked"])
+  },
+  mounted() {
+    if (this.isLiked(this.$props.post.id)) {
+      this.score = 1
+    }
+    if (this.isDisliked(this.$props.post.id)) {
+      this.score = -1
+    }
+  },
   methods: {
-    ...mapActions(["addComment", "deletePost"]),
+    ...mapActions(["addComment", "deletePost", "addLikeDislike"]),
+    changeScore(i) {
+      // num -1 dislike, 0 cancel, 1 like
+      this.addLikeDislike({ id: this.$props.post.id, like: i, score: this.score});
+      if (this.score == 1 || this.score == -1) {
+        this.score = 0
+      } else {
+        this.score = i
+      }
+      
+    },
     deleteAPost() {
       this.deletePost(this.$props.post.id);
       this.dialog = false;

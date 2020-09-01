@@ -120,7 +120,7 @@ export default {
       this.logOut();
     }
   },
-  computed: mapGetters(["user"])
+  computed: mapGetters(["user"]),
 };
 </script>
 
