@@ -10,19 +10,9 @@ let Post = db.define("post", {
     type: Sequelize.STRING(500),
     allowNull: false,
   },
-  likes: {
+  score: {
     type: Sequelize.INTEGER,
     defaultValue: 0,
-    validate: {
-      min: 0,
-    },
-  },
-  dislikes: {
-    type: Sequelize.INTEGER,
-    defaultValue: 0,
-    validate: {
-      min: 0,
-    },
   },
 });
 

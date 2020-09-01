@@ -106,58 +106,61 @@ exports.modify = async (req, res, next) => {
 };
 
 exports.manageLike = (req, res, next) => {
-  let like = 0;
-  let dislike = 0;
-  switch (req.body.like) {
-    case 1:
-      postLike
-        .create({
-          isLiked: 1,
-          postId: req.params.id,
-          userId: req.body.userId,
-        })
-        .then(() => res.status(200).json({ message: "Post liké !" }));
-      like = 1;
-      break;
-    case 0:
-      postLike
-        .findOne({
-          where: {
-            postId: req.params.id,
-            userId: req.body.userId,
-          },
-        })
-        .then((postLike) => {
-          if (postLike == 0) {
-            dislike = -1;
-          } else {
-            like = -1;
-          }
-          postLike
-            .destroy()
-            .then(() => res.status(200).json({ message: "Action annulé" }));
-        })
-        .catch((err) => res.status(500).json({ err }));
-      break;
-    case -1:
-      postLike
-        .create({
-          isLiked: 0,
-          postId: req.params.id,
-          userId: req.body.userId,
-        })
-        .then(() => res.status(200).json({ message: "Post disliké !" }));
-      dislike = 1;
-      break;
-  }
   Post.findOne({
     where: {
       id: req.params.id,
     },
   }).then((post) => {
-    post.likes += like;
-    post.dislikes += dislike;
-    post.save();
+    switch (req.body.like) {
+      case 1:
+        postLike
+          .create({
+            isLiked: 1,
+            postId: req.params.id,
+            userId: req.body.userId,
+          })
+          .then(() => {
+            post.score += 1;
+            post.save();
+            res.status(200).json({ message: "Post liké !" });
+          });
+        break;
+      case 0:
+        postLike
+          .findOne({
+            where: {
+              postId: req.params.id,
+              userId: req.body.userId,
+            },
+          })
+          .then((postLike) => {
+            if (postLike == 0) {
+              post.score += 1;
+              post.save();
+            } else {
+              post.score += -1;
+              post.save();
+            }
+            postLike
+              .destroy()
+              .then(() => res.status(200).json({ message: "Action annulé" }));
+          })
+          .catch((err) => res.status(500).json({ err }));
+        break;
+      case -1:
+        postLike
+          .create({
+            isLiked: 0,
+            postId: req.params.id,
+            userId: req.body.userId,
+          })
+          .then(() => {
+            post.score += -1;
+            post.save();
+            res.status(200).json({ message: "Post disliké !" });
+          });
+        break;
+    }
   });
 };
 

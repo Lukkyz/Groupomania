@@ -18,15 +18,18 @@ const getters = {
     let postUser = state.posts.filter((post) => post.userId == userId);
     return postUser;
   },
+  postDisliked: (state) => state.postDisliked,
+  postLiked: (state) => state.postLiked,
 };
 
 const actions = {
   async fetchPosts({ commit, rootGetters }) {
     let response = await axios.get(post_uri);
     let userId = rootGetters.user.userId;
-    let liked = await axios.get(post_uri + "/liked/" + userId);
-    let disliked = await axios.get(post_uri + "/disliked/" + userId);
+    let liked = await axios.get(post_uri + "liked/" + userId);
+    let disliked = await axios.get(post_uri + "disliked/" + userId);
     commit("setPosts", response.data);
+    console.log(liked.data);
     commit("setLiked", liked.data);
     commit("setDisliked", disliked.data);
   },
@@ -51,11 +54,37 @@ const actions = {
     let response = await axios.post(comment_uri, comment);
     commit("newComment", response.data);
   },
+
+  async addLikeDislike({ commit, rootGetters }, obj) {
+    const { id, like } = obj;
+    await axios
+      .post(post_uri + obj.id + "/like", {
+        userId: rootGetters.user.userId,
+        like,
+      })
+      .then(() => {
+        if (like == 1) {
+          commit("addLike", id);
+          commit("changeScore", id, 1);
+        } else if (like == -1) {
+          commit("addDislike", id);
+          commit("changeScore", id, -1);
+        }
+      });
+  },
 };
 
 const mutations = {
-  setLiked: (state, posts) => (state.likedPosts = posts),
-  setDisliked: (state, posts) => (state.dislikedPosts = posts),
+  changeScore: (state, idPost, num) => {
+    let index = state.posts.findIndex((post) => {
+      post.id == idPost;
+    });
+    state.posts[index].score += num;
+  },
+  addLike: (state, id) => state.postLiked.unshift(id),
+  addDisiiked: (state, id) => state.postLiked.unshift(id),
+  setLiked: (state, posts) => (state.postLiked = posts),
+  setDisliked: (state, posts) => (state.postDisliked = posts),
   setPosts: (state, posts) => (state.posts = posts),
   newPost: (state, post) => state.posts.unshift(post),
   removePost: (state, id) =>

@@ -15,6 +15,33 @@
           <v-list-item-content>
             <v-list-item-title>{{ post.user.firstName + " " + post.user.lastName}}</v-list-item-title>
           </v-list-item-content>
+          <span class="mt-2">{{ post.score }}</span>
+          <div v-if="isLiked" class="mt-2">
+            <span @click="changeScore(0)">
+              <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                <path fill="green" d="M15,20H9V12H4.16L12,4.16L19.84,12H15V20Z" />
+              </svg>
+            </span>
+          </div>
+          <div v-else class="mt-2">
+            <span @click="changeScore(1)">
+              <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                <path
+                  fill="currentColor"
+                  d="M16,13V21H8V13H2L12,3L22,13H16M7,11H10V19H14V11H17L12,6L7,11Z"
+                />
+              </svg>
+            </span>
+          </div>
+
+          <span class="mt-2" @click="changeScore(-1)">
+            <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+              <path
+                :fill="isDisliked ? 'red' : ''"
+                d="M22,11L12,21L2,11H8V3H16V11H22M12,18L17,13H14V5H10V13H7L12,18Z"
+              />
+            </svg>
+          </span>
 
           <v-row align="center" justify="end">
             <div v-if="post.userId == user.userId || user.moderator == true">
@@ -79,9 +106,18 @@ export default {
       }
     };
   },
-  computed: mapGetters(["user"]),
+  computed: {
+    ...mapGetters(["user", "postLiked", "postDisliked"])
+  },
   methods: {
-    ...mapActions(["addComment", "deletePost"]),
+    ...mapActions(["addComment", "deletePost", "addLikeDislike"]),
+    changeScore(num) {
+      // num -1 dislike, 0 cancel, 1 like
+      this.addLikeDislike({ id: this.$props.post.id, like: num });
+      if (!this.isLiked()) {
+        this.$props.post.score += 1;
+      }
+    },
     deleteAPost() {
       this.deletePost(this.$props.post.id);
       this.dialog = false;
