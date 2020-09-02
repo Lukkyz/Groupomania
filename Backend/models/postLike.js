@@ -20,6 +20,29 @@ let postLike = db.define(
   }
 );
 
+postLike.beforeDestroy(async (postLike, options) => {
+  console.log(postLike);
+  if (postLike.isLiked == 1) {
+    Post.findOne({
+      where: {
+        id: postLike.postId,
+      },
+    }).then((post) => {
+      post.score += -1;
+      post.save();
+    });
+  } else if (postLike.isLiked == 0) {
+    Post.findOne({
+      where: {
+        id: postLike.postId,
+      },
+    }).then((post) => {
+      post.score += 1;
+      post.save();
+    });
+  }
+});
+
 db.sync()
   .then()
   .catch((err) => console.error(err));

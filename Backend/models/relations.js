@@ -21,5 +21,28 @@ Post.belongsTo(User, { foreignKey: { name: "userId" } });
 Post.hasMany(Comment, { as: "comments", foreignKey: "postId" });
 Post.belongsTo(User, { foreignKey: { name: "userId" } });
 
-postLike.belongsTo(User, { as: "userLike", foreignKey: "userId" });
-postLike.belongsTo(Post, { as: "postLike", foreignKey: "postId" });
+User.hasMany(postLike, {
+  as: "userLiked",
+  foreignKey: "userId",
+  onDelete: "cascade",
+  hooks: true,
+});
+
+Post.hasMany(postLike, {
+  as: "postLiked",
+  foreignKey: "postId",
+  onDelete: "cascade",
+  hooks: true,
+});
+
+postLike.belongsTo(User, {
+  as: "userLike",
+  foreignKey: "userId",
+  hooks: true,
+});
+
+postLike.belongsTo(Post, {
+  as: "postLike",
+  foreignKey: "postId",
+  hooks: true,
+});

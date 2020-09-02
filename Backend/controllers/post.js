@@ -134,13 +134,6 @@ exports.manageLike = (req, res, next) => {
             },
           })
           .then((postLike) => {
-            if (postLike.isLiked == 0) {
-              post.score += 1;
-              post.save();
-            } else {
-              post.score += -1;
-              post.save();
-            }
             postLike
               .destroy()
               .then(() => res.status(200).json({ message: "Action annulé" }));
