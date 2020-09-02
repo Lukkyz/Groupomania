@@ -8,7 +8,7 @@
       </div>
     </div>
     <h3 class="col-sm-4 offset-3 mt-5">Posts</h3>
-    <div v-for="post in posts" v-bind:key="post.id">
+    <div v-for="post in posts" :key="post.id">
       <Post @deleted="deletePost" :post="post" />
     </div>
     <p class="col-sm-3 offset-3 mt-2" v-if="posts.length == 0">Vous n'avez pas de post</p>

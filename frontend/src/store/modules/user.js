@@ -38,6 +38,7 @@ const actions = {
   async logOut({ commit }) {
     await axios.post(user_uri + "logout");
     commit("setUser", "");
+    this.dispatch('clearLikeDislike')
     router.push("/login");
   },
   async deleteUser({ commit }, id) {

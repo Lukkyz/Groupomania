@@ -134,7 +134,7 @@ exports.manageLike = (req, res, next) => {
             },
           })
           .then((postLike) => {
-            if (postLike == 0) {
+            if (postLike.isLiked == 0) {
               post.score += 1;
               post.save();
             } else {

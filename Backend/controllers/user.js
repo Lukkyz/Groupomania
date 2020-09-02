@@ -86,7 +86,7 @@ exports.refreshToken = (req, res, next) => {
         moderator: user.moderator,
         token: newToken,
       });
-    });
+    }).catch(err => res.send({ accesstoken: ""}));
   } catch (err) {
     return res.send({ accesstoken: "" });
   }
