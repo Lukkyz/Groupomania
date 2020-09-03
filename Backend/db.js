@@ -1,6 +1,6 @@
 let Sequelize = require("sequelize");
 let db = new Sequelize(
-  process.env.DB_TABLE,
+  process.env.DB_NAME,
   process.env.DB_USER,
   process.env.DB_PASS,
   {
