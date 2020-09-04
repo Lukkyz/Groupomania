@@ -4,7 +4,7 @@ let User = require("../models/user");
 exports.getAll = (req, res, next) => {
   Comment.findAll({
     order: [["parent_comment_id", "ASC"]],
-  }).then((comments) => res.status(201).json(comments));
+  }).then((comments) => res.status(200).json(comments));
 };
 
 exports.commentUser = (req, res, next) => {
@@ -19,7 +19,9 @@ exports.commentUser = (req, res, next) => {
         attributes: ["firstName", "lastName"],
       },
     ],
-  }).then((comment) => res.status(201).json(comment));
+  })
+  .then((comment) => res.status(200).json(comment))
+  .catch((err) => res.status(500).json(err))
 };
 
 exports.commentPost = (req, res, next) => {
@@ -34,7 +36,9 @@ exports.commentPost = (req, res, next) => {
         attributes: ["firstName", "lastName"],
       },
     ],
-  }).then((comment) => res.status(201).json(comment));
+  })
+  .then((comment) => res.status(200).json(comment))
+  .catch((err) => res.status(500).json(err))
 };
 
 exports.create = (req, res, next) => {

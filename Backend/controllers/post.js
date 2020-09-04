@@ -23,9 +23,11 @@ exports.getAll = (req, res, next) => {
         ],
       },
     ],
-  }).then((posts) => {
-    res.status(200).json(posts);
-  });
+  })
+    .then((posts) => {
+      res.status(200).json(posts);
+    })
+    .catch((err) => res.status(500).json(err));
 };
 
 exports.postUser = (req, res, next) => {
@@ -51,7 +53,9 @@ exports.postUser = (req, res, next) => {
         ],
       },
     ],
-  }).then((posts) => res.status(201).json(posts));
+  })
+    .then((posts) => res.status(200).json(posts))
+    .catch((err) => res.status(500).json(err));
 };
 
 exports.getOne = (req, res, next) => {
@@ -63,7 +67,9 @@ exports.getOne = (req, res, next) => {
       model: Comment,
       as: "comments",
     },
-  }).then((post) => res.status(200).json(post));
+  })
+    .then((post) => res.status(200).json(post))
+    .catch((err) => res.status(500).json(err));
 };
 
 exports.create = (req, res, next) => {
@@ -101,7 +107,10 @@ exports.modify = async (req, res, next) => {
       title,
       body,
     });
-    res.json(200).json({ message: "Votre topic a bien été modifié !" });
+    res
+      .status(200)
+      .json({ message: "Votre topic a bien été modifié !" })
+      .catch((err) => res.status(500).json({ err }));
   }
 };
 
@@ -122,7 +131,10 @@ exports.manageLike = (req, res, next) => {
           .then(() => {
             post.score += 1;
             post.save();
-            res.status(200).json({ message: "Post liké !" });
+            res
+              .status(200)
+              .json({ message: "Post liké !" })
+              .catch((err) => res.status(500).json({ err }));
           });
         break;
       case 0:
@@ -150,7 +162,10 @@ exports.manageLike = (req, res, next) => {
           .then(() => {
             post.score += -1;
             post.save();
-            res.status(200).json({ message: "Post disliké !" });
+            res
+              .status(200)
+              .json({ message: "Post disliké !" })
+              .catch((err) => res.status(500).json({ err }));
           });
         break;
     }
